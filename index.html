@@ -7,13 +7,14 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css" integrity="sha384-KiWOvVjnN8qwAZbuQyWDIbfCLFhLXNETzBQjA/92pIowpC0d2O3nppDGQVgwd2nB" crossorigin="anonymous">
 	<!-- The loading of KaTeX is deferred to speed up page rendering -->
 	<script src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js" integrity="sha384-0fdwu/T/EQMsQlrHCCHoH10pkPLlKA1jL5dFyUOvB3lfeT2540/2g6YgSi2BL14p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 
 <body>
 	<div class="w-4/5 m-auto">
 		<div class="text-6xl my-12">Quiz-App</div>
 		<div class="text-sm mb-0">Fortschritt</div>
-		<progress id="progress" value="0" max="100" class="w-full"></progress>
+		<progress id="progress" value="0" max="100" class="w-full bg-white rounded-lg"></progress>
 		<div class="mt-12 text-4xl">Bilde die erste Ableitung</div>
 		<div class="text-xl mt-6 mb-6">f(x)=<span id="aufgabe"></span></div>
 		<input class="border rounded px-2 py-1" id="eingabe" placeholder="3x^2+0,2x-1" />
@@ -22,7 +23,7 @@
 			<button class="border disabled:text-gray-400 shadow-lg rounded-lg px-4 py-2" id="weiter" onClick="weiter()">weiter</button>
 		</div>
 	</div>
-	<div id="meldung" class="absolute bottom-0 w-screen bg-red-500 hidden p-12 text-white text-6xl rounded-t-xl shadow-xl"></div>
+	<div id="meldung" class="absolute bottom-0 w-screen  hidden p-12 text-white text-6xl rounded-t-xl shadow-xl"></div>
 	<script>
 	const aufgabe = ['3x+2', 'x^2', 'x-2', '3x^2-x^3']
 	const loesung = ['3', '2x', '1', '6x-3x^2']
@@ -46,19 +47,26 @@
 		ele_weiter.focus()
 		if(ele_eingabe.value === loesung[n]) {
 			ele_meldung.innerHTML = 'richtig'
-            ele_meldung.classList.toggle('bg-red-500')
-            ele_meldung.classList.toggle('bg-green-500')
+                       try {ele_meldung.classList.remove('bg-red-500')}catch{}
+            try {ele_meldung.classList.add('bg-green-500')}catch{}
+ 
 			richtige += 1
 			ele_progress.value += (100 / aufgabe.length);
+            confetti({
+  particleCount: 100,
+  spread: 70,
+  origin: { y: 0.6 }
+});
 		} else {
 			ele_meldung.innerHTML = 'falsch'
-                      ele_meldung.classList.toggle('bg-red-500')
-            ele_meldung.classList.toggle('bg-green-500')
-		}
+                       try {ele_meldung.classList.remove('bg-green-500')}catch{}
+            try {ele_meldung.classList.add('bg-red-500')}catch{}
+		
 	}
+                }
 
 	function weiter() {
-                ele_eingabe.setAttribute('disabled', false)
+                ele_eingabe.removeAttribute('disabled')
 
 		ele_meldung.classList.toggle('hidden')
 		ele_check.removeAttribute('disabled')
